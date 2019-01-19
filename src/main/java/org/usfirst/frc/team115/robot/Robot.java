@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
 		drivetrain = new Drivetrain();
 		fp = new FollowProfile();
 		oi = new OI();
-		count = 0;	
+		count = fp.trajectory.length() -1;	
 	}
 
 	/**
@@ -112,15 +112,13 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		//int count = (int) SmartDashboard.getNumber("Waypoint Num:", 0);
-		 
-		SmartDashboard.putNumber("BackLeft",  drivetrain.backLeft.get());
 		
 		Trajectory.Segment seg = fp.trajectory.get(count);
-		SmartDashboard.putNumber("Position", seg.position);
-		SmartDashboard.putNumber("Velocity", seg.velocity);
+		SmartDashboard.putNumber("Position", seg.position);	 
+		SmartDashboard.putNumber("Left MotorOutput",  drivetrain.backLeft.get());
+		SmartDashboard.putNumber("Right MotorOutput:", drivetrain.backRight.get());
 		SmartDashboard.putNumber("Left Encoder Value:",drivetrain.left.getPosition());
-		SmartDashboard.putNumber("Right Encoder Value", drivetrain.right.getPosition());
+		SmartDashboard.putNumber("Right Encoder Value", -1 *drivetrain.right.getPosition());
 		
 	}
 	

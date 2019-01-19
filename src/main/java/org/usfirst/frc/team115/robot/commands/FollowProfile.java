@@ -26,8 +26,8 @@ public class FollowProfile extends Command {
 	public FollowProfile() {
 		Waypoint[] points = new Waypoint[] {
 					new Waypoint(0, 0, 0),
-					new Waypoint(2, 0, 0),
-					new Waypoint(4, 0, 0),
+					new Waypoint(0.7, 0, 0),
+					new Waypoint(1, 0, 0),
 		};
 		scheduler = Executors.newScheduledThreadPool(1);
 		Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, Constants.TIME_STEP, Constants.MAX_VELOCITY, Constants.MAX_ACCEL, Constants.MAX_JERK);
@@ -38,12 +38,9 @@ public class FollowProfile extends Command {
 	}
 	
 	protected void initialize() {
-		SmartDashboard.putNumber("START", 0.0);
 		motionFollower = scheduler.scheduleAtFixedRate(new Runnable() {
 			public void run() {
-				SmartDashboard.putNumber("INIT", counter);
 				Robot.drivetrain.updateMotionFollowing();
-				counter++;
 			}
 			
 		}, (int)(Constants.TIME_STEP*1000), (int)(Constants.TIME_STEP*1000), TimeUnit.MILLISECONDS);
@@ -51,7 +48,7 @@ public class FollowProfile extends Command {
 		Robot.drivetrain.leftFollower.setTrajectory(modifier.getLeftTrajectory());
 		Robot.drivetrain.rightFollower.setTrajectory(modifier.getRightTrajectory());
 		Robot.drivetrain.leftFollower.configureEncoder((int)Robot.drivetrain.left.getPosition(), 1000, Constants.WHEEL_DIAMETER);
-		Robot.drivetrain.rightFollower.configureEncoder((int)Robot.drivetrain.right.getPosition(), 1000, Constants.WHEEL_DIAMETER);
+		Robot.drivetrain.rightFollower.configureEncoder(-1 *(int)Robot.drivetrain.right.getPosition(), 1000, Constants.WHEEL_DIAMETER);
 
 	}
 	
