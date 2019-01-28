@@ -8,6 +8,8 @@
 package org.usfirst.frc.team115.robot;
 
 
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import org.usfirst.frc.team115.robot.commands.FollowProfile;
 import org.usfirst.frc.team115.robot.subsystems.Drivetrain;
 
@@ -51,12 +53,20 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
+		drivetrain.frontLeft.setIdleMode(IdleMode.kCoast);
+		drivetrain.backLeft.setIdleMode(IdleMode.kCoast);
+		drivetrain.frontRight.setIdleMode(IdleMode.kCoast);
+		drivetrain.backRight.setIdleMode(IdleMode.kCoast);
 
 	}
 
 	@Override
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
+
+		double currDistance = (Robot.drivetrain.left.getPosition() /8.8) * Math.PI * Constants.WHEEL_DIAMETER;
+		
+		SmartDashboard.putNumber("CURRENT Distance (Meters) 2", currDistance);
 	}
 
 	/**
@@ -97,6 +107,11 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
+
+		drivetrain.frontLeft.setIdleMode(IdleMode.kBrake);
+		drivetrain.backLeft.setIdleMode(IdleMode.kBrake);
+		drivetrain.frontRight.setIdleMode(IdleMode.kBrake);
+		drivetrain.backRight.setIdleMode(IdleMode.kBrake);
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
@@ -104,6 +119,8 @@ public class Robot extends TimedRobot {
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
 		}
+
+		drivetrain.navX.zeroYaw();
 	}
 
 	/**
@@ -115,11 +132,13 @@ public class Robot extends TimedRobot {
 		
 		Trajectory.Segment seg = fp.trajectory.get(count);
 		SmartDashboard.putNumber("Position", seg.position);	 
+		SmartDashboard.putNumber("YAW", this.drivetrain.navX.getAngle());
 		SmartDashboard.putNumber("Left MotorOutput",  drivetrain.backLeft.get());
 		SmartDashboard.putNumber("Right MotorOutput:", drivetrain.backRight.get());
 		SmartDashboard.putNumber("Left Encoder Value:",drivetrain.left.getPosition());
 		SmartDashboard.putNumber("Right Encoder Value", -1 *drivetrain.right.getPosition());
-		
+		SmartDashboard.putNumber("LEFT2", drivetrain.left2.getPosition());
+		SmartDashboard.putNumber("Right2", drivetrain.right2.getPosition());
 	}
 	
 

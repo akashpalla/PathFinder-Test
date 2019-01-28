@@ -26,8 +26,8 @@ public class FollowProfile extends Command {
 	public FollowProfile() {
 		Waypoint[] points = new Waypoint[] {
 					new Waypoint(0, 0, 0),
-					new Waypoint(0.7, 0, 0),
-					new Waypoint(1, 0, 0),
+					new Waypoint(2, 1, 5),
+					//new Waypoint(4, 2, 10),
 		};
 		scheduler = Executors.newScheduledThreadPool(1);
 		Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, Constants.TIME_STEP, Constants.MAX_VELOCITY, Constants.MAX_ACCEL, Constants.MAX_JERK);
@@ -47,16 +47,46 @@ public class FollowProfile extends Command {
 		
 		Robot.drivetrain.leftFollower.setTrajectory(modifier.getLeftTrajectory());
 		Robot.drivetrain.rightFollower.setTrajectory(modifier.getRightTrajectory());
-		Robot.drivetrain.leftFollower.configureEncoder((int)Robot.drivetrain.left.getPosition(), 1000, Constants.WHEEL_DIAMETER);
-		Robot.drivetrain.rightFollower.configureEncoder(-1 *(int)Robot.drivetrain.right.getPosition(), 1000, Constants.WHEEL_DIAMETER);
-
+		Robot.drivetrain.leftFollower.configureEncoder((int)(Robot.drivetrain.left.getPosition() * 42) , Constants.TICKS_PER_ROTATION, Constants.WHEEL_DIAMETER);
+		Robot.drivetrain.rightFollower.configureEncoder(-1 *(int)(Robot.drivetrain.right.getPosition()*42), Constants.TICKS_PER_ROTATION, Constants.WHEEL_DIAMETER);
+		 
 	}
 	
-	protected void execute() { }
+	protected void execute() {
+
+		Trajectory.Segment seg = trajectory.get(trajectory.length() - 1);
+		double position = seg.position;
+		double currDistance = (Robot.drivetrain.left.getPosition() /8.8) * Math.PI * Constants.WHEEL_DIAMETER;
+
+		SmartDashboard.putNumber("CURRENT Distance (Meters)", currDistance);
+		SmartDashboard.putNumber("ERROR", position - currDistance);
+	 }
 
 
 	protected boolean isFinished() {
-		return Robot.drivetrain.leftFollower.isFinished() && Robot.drivetrain.rightFollower.isFinished();
+	/*	Trajectory.Segment seg = trajectory.get(trajectory.length() - 1);
+		double position = seg.position;
+		double [] posArr = new double [10];
+
+		double next = Robot.drivetrain.right.getPosition();
+		double temp = 0;
+		for(int i = 9; i <0; i--) {
+			temp = posArr[i];
+			posArr[i] = next;
+			next = temp; 
+		}
+
+		if(Robot.drivetrain.leftFollower.isFinished() && Robot.drivetrain.rightFollower.isFinished()) {
+			 for(int i = 0; i < 10; i++) {
+					 if(Math.abs(Robot.drivetrain.left2.getPosition() - position) > Constants.MAX_OFFSET)
+					 	return false;
+			}
+			return true; 	 
+		}
+		
+		return false;
+		*/
+		return (Robot.drivetrain.leftFollower.isFinished() && Robot.drivetrain.rightFollower.isFinished());
 	}
 	
 	
