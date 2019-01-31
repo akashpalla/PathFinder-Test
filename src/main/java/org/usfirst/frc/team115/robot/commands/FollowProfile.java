@@ -23,12 +23,7 @@ public class FollowProfile extends Command {
 	public Trajectory trajectory;
 	public int counter;
 
-	public FollowProfile() {
-		Waypoint[] points = new Waypoint[] {
-					new Waypoint(0, 0, 0),
-					new Waypoint(2, 0, 0),
-					//new Waypoint(4.87, 1.07, Pathfinder.d2r(20)),
-		};
+	public FollowProfile(Waypoint[] points) {
 		scheduler = Executors.newScheduledThreadPool(1);
 		Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, Constants.TIME_STEP, Constants.MAX_VELOCITY, Constants.MAX_ACCEL, Constants.MAX_JERK);
 		trajectory = Pathfinder.generate(points, config);

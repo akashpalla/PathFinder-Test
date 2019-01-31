@@ -9,6 +9,8 @@ package org.usfirst.frc.team115.robot;
 
 import org.usfirst.frc.team115.robot.commands.CycleCommand;
 import org.usfirst.frc.team115.robot.commands.FollowProfile;
+import org.usfirst.frc.team115.robot.commands.VisionPath;
+
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -31,8 +33,8 @@ public class OI {
 		
 		quickTurn = new JoystickButton(driver, 5);
 
-		//cycle.whenPressed(new CycleCommand());
-		motionProfiling.whenPressed(new FollowProfile());
+	//	cycle.whenPressed(new CycleCommand());
+		motionProfiling.whenPressed(new VisionPath());
 	}
 
 	public double getThrottle() {

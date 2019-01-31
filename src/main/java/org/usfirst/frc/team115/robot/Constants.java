@@ -10,5 +10,8 @@ public class Constants {
 	public static final double MAX_OFFSET = 20;
 	public static final double GEAR_RATIO = 8.8;
 	public static final int TICKS_PER_ROTATION = 42 * 9; 
+	public static final double CAMERA_HEIGHT = 0.0508; //Meters	// 2inches
+	public static final double TARGET_HEIGHT = 0.7239; //Meters	//30 inches  // 71.4cm to Hatch Height
+	public static final double CAMERA_ANGLE = 0;
 	
 }

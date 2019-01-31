@@ -9,6 +9,9 @@ import com.revrobotics.CANSparkMaxLowLevel;
 import org.usfirst.frc.team115.robot.Constants;
 import org.usfirst.frc.team115.robot.commands.DriveWithJoystick;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -24,6 +27,10 @@ public class Drivetrain extends Subsystem{
 	public EncoderFollower leftFollower;
 	public EncoderFollower rightFollower;
 	public AHRS navX;
+	NetworkTable table; 
+	NetworkTableEntry tx; 
+	NetworkTableEntry ty; 
+	NetworkTableEntry ta;
 	//SpeedControllerGroup leftDrive;
   	//SpeedControllerGroup rightDrive;
   	//DifferentialDrive drive;
@@ -52,7 +59,12 @@ public class Drivetrain extends Subsystem{
 		leftFollower.configurePIDVA(0, 0, 0, 1/ Constants.MAX_VELOCITY + 0.9, 0);
 		rightFollower.configurePIDVA(0, 0, 0, 1/ Constants.MAX_VELOCITY, 0);
 		navX = new AHRS(SPI.Port.kMXP);
-		
+
+
+		table = NetworkTableInstance.getDefault().getTable("limelight");
+		tx = table.getEntry("tx");
+	 	ty = table.getEntry("ty");
+		ta = table.getEntry("ta");		
 	}
 	
 	
@@ -62,6 +74,22 @@ public class Drivetrain extends Subsystem{
 		frontRight.set(rightOutput);
 		backRight.set(rightOutput);
 
+	}
+
+
+	public double getAngle() {
+		return tx.getDouble(0.0);
+	}
+
+	public double getDistance() {
+		double angle = ty.getDouble(0);
+		return (Constants.TARGET_HEIGHT - Constants.CAMERA_HEIGHT)/Math.tan(Math.toRadians(Constants.CAMERA_ANGLE + angle));
+	}
+
+	public double getDistanceArea(){
+		double area = ta.getDouble(0);
+
+		return Math.log10(area/5.45)/Math.log10(0.5) + 2;
 	}
 
 	public void updateMotionFollowing() { 
@@ -88,6 +116,30 @@ public class Drivetrain extends Subsystem{
 
 	public void drive(double throttle, double wheel, boolean isQuickTurn) {
 		//drive.curvatureDrive(throttle, wheel, isQuickTurn);
+	}
+
+	public double findNearestAngle(){
+		double gyroAngle = getGyroAngle();
+		int num = (int)(getGyroAngle())/90;
+		int high = 90 * (num+1);
+		int low = 90 * num;
+		int target;
+
+		if(gyroAngle < 0)
+			high = 90 * num;
+			low = 90 * (num - 1);
+
+		if(Math.abs(high-gyroAngle) < Math.abs(low - gyroAngle))
+			target = high;
+		else
+			target = low;
+
+
+		return target;
+	}
+
+	public double getGyroAngle() {
+		return navX.getAngle();
 	}
 
 	protected void initDefaultCommand() {

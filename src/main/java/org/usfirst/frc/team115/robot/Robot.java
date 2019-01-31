@@ -41,9 +41,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		drivetrain = new Drivetrain();
-		fp = new FollowProfile();
 		oi = new OI();
-		count = fp.trajectory.length() -1;	
+	//	count = fp.trajectory.length() -1;	
 	}
 
 	/**
@@ -108,10 +107,10 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopInit() {
 
-		drivetrain.frontLeft.setIdleMode(IdleMode.kBrake);
-		drivetrain.backLeft.setIdleMode(IdleMode.kBrake);
-		drivetrain.frontRight.setIdleMode(IdleMode.kBrake);
-		drivetrain.backRight.setIdleMode(IdleMode.kBrake);
+		drivetrain.frontLeft.setIdleMode(IdleMode.kCoast);
+		drivetrain.backLeft.setIdleMode(IdleMode.kCoast);
+		drivetrain.frontRight.setIdleMode(IdleMode.kCoast);
+		drivetrain.backRight.setIdleMode(IdleMode.kCoast);
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
@@ -130,15 +129,24 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		
-		Trajectory.Segment seg = fp.trajectory.get(count);
-		SmartDashboard.putNumber("Position", seg.position);	 
-		SmartDashboard.putNumber("YAW", this.drivetrain.navX.getAngle());
+	
+		SmartDashboard.putNumber("NavX Angle:", this.drivetrain.navX.getAngle());
 		SmartDashboard.putNumber("Left MotorOutput",  drivetrain.backLeft.get());
 		SmartDashboard.putNumber("Right MotorOutput:", drivetrain.backRight.get());
 		SmartDashboard.putNumber("Left Encoder Value:",drivetrain.left.getPosition());
 		SmartDashboard.putNumber("Right Encoder Value", -1 *drivetrain.right.getPosition());
-		SmartDashboard.putNumber("LEFT2", drivetrain.left2.getPosition());
-		SmartDashboard.putNumber("Right2", drivetrain.right2.getPosition());
+		SmartDashboard.putNumber("Current Distance (Trig):", drivetrain.getDistance());
+		SmartDashboard.putNumber("Distance (Area)", drivetrain.getDistanceArea());
+		SmartDashboard.putNumber("Nearest Angle", drivetrain.findNearestAngle()); 
+
+		double distance = Robot.drivetrain.getDistance();
+		double targetAngle = Robot.drivetrain.findNearestAngle();
+		double angle2 = Robot.drivetrain.getAngle() + Robot.drivetrain.getGyroAngle();
+		double xDistance = distance * Math.sin(Math.toRadians(angle2));
+		double yDistance = distance * Math.cos(Math.toRadians(angle2));
+
+		SmartDashboard.putNumber("YDISTANCE", yDistance);
+		SmartDashboard.putNumber("XDistance", xDistance);
 	}
 	
 
