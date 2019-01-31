@@ -26,8 +26,8 @@ public class FollowProfile extends Command {
 	public FollowProfile() {
 		Waypoint[] points = new Waypoint[] {
 					new Waypoint(0, 0, 0),
-					new Waypoint(2, 1, 5),
-					//new Waypoint(4, 2, 10),
+					new Waypoint(2, 0, 0),
+					//new Waypoint(4.87, 1.07, Pathfinder.d2r(20)),
 		};
 		scheduler = Executors.newScheduledThreadPool(1);
 		Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, Constants.TIME_STEP, Constants.MAX_VELOCITY, Constants.MAX_ACCEL, Constants.MAX_JERK);

@@ -22,18 +22,29 @@ public class OI {
 	Joystick driver;
 	JoystickButton motionProfiling;
 	JoystickButton cycle;
+	JoystickButton quickTurn;
 
 	public OI () {
 		driver = new Joystick(0);
 		motionProfiling = new JoystickButton(driver, 3);
-		cycle = new JoystickButton(driver, 5);
+		//cycle = new JoystickButton(driver, 5);
 		
-		cycle.whenPressed(new CycleCommand());
+		quickTurn = new JoystickButton(driver, 5);
+
+		//cycle.whenPressed(new CycleCommand());
 		motionProfiling.whenPressed(new FollowProfile());
 	}
-	
-	public boolean getCycle () {
-		return cycle.get();
+
+	public double getThrottle() {
+		return driver.getRawAxis(5);
+	}
+
+	public double getWheel() {
+		return driver.getRawAxis(0);
+	}
+
+	public boolean isQuickTurn() {
+		return quickTurn.get();
 	}
 
 }
