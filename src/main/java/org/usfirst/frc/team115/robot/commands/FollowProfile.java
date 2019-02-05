@@ -26,7 +26,7 @@ public class FollowProfile extends Command {
 	public FollowProfile() {
 		Waypoint[] points = new Waypoint[] {
 					new Waypoint(0, 0, 0),
-					new Waypoint(2, 0, 0),
+					new Waypoint(2, -1, 0),
 					//new Waypoint(4.87, 1.07, Pathfinder.d2r(20)),
 		};
 		scheduler = Executors.newScheduledThreadPool(1);
@@ -64,29 +64,17 @@ public class FollowProfile extends Command {
 
 
 	protected boolean isFinished() {
-	/*	Trajectory.Segment seg = trajectory.get(trajectory.length() - 1);
+		Trajectory.Segment seg = trajectory.get(trajectory.length() - 1);
 		double position = seg.position;
-		double [] posArr = new double [10];
 
-		double next = Robot.drivetrain.right.getPosition();
-		double temp = 0;
-		for(int i = 9; i <0; i--) {
-			temp = posArr[i];
-			posArr[i] = next;
-			next = temp; 
+		 if(Robot.drivetrain.leftFollower.isFinished() && Robot.drivetrain.rightFollower.isFinished()){
+			if(Math.abs(Robot.drivetrain.left2.getPosition() - position) > Constants.MAX_OFFSET)
+				return false;
+			if(Math.abs(Robot.drivetrain.left2.getPosition() - position) > Constants.MAX_OFFSET)
+				return false;
+			return true;
 		}
-
-		if(Robot.drivetrain.leftFollower.isFinished() && Robot.drivetrain.rightFollower.isFinished()) {
-			 for(int i = 0; i < 10; i++) {
-					 if(Math.abs(Robot.drivetrain.left2.getPosition() - position) > Constants.MAX_OFFSET)
-					 	return false;
-			}
-			return true; 	 
-		}
-		
-		return false;
-		*/
-		return (Robot.drivetrain.leftFollower.isFinished() && Robot.drivetrain.rightFollower.isFinished());
+			return false;
 	}
 	
 	

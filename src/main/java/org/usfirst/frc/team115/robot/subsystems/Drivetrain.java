@@ -49,8 +49,8 @@ public class Drivetrain extends Subsystem{
 		frontRight.setIdleMode(IdleMode.kBrake);
 		backRight.setIdleMode(IdleMode.kBrake);
 
-		leftFollower.configurePIDVA(0, 0, 0, 1/ Constants.MAX_VELOCITY + 0.9, 0);
-		rightFollower.configurePIDVA(0, 0, 0, 1/ Constants.MAX_VELOCITY, 0);
+		leftFollower.configurePIDVA(0, 0, 0, 1/ Constants.MAX_VELOCITY, 0);
+		rightFollower.configurePIDVA(0 , 0, 0, 1/ Constants.MAX_VELOCITY, 0);
 		navX = new AHRS(SPI.Port.kMXP);
 		
 	}
